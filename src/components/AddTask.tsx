@@ -56,6 +56,8 @@ const AddTask: React.FC<AddTaskProps> = ({ onAdd }) => {
   return (
     <form className={styles.addTask} onSubmit={handleSubmit}>
       <input
+        id="task-title"
+        name="title"
         type="text"
         placeholder="Add a task..."
         className={styles.titleInput}
@@ -67,8 +69,10 @@ const AddTask: React.FC<AddTaskProps> = ({ onAdd }) => {
       {isExpanded && (
         <div className={styles.optionalFields}>
           <div className={styles.field}>
-            <label>Description</label>
+            <label htmlFor="task-description">Description</label>
             <textarea
+              id="task-description"
+              name="description"
               className={styles.textarea}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -77,16 +81,20 @@ const AddTask: React.FC<AddTaskProps> = ({ onAdd }) => {
 
           <div className={styles.multiFieldRow}>
             <div className={styles.field}>
-              <label>Deadline Date</label>
+              <label htmlFor="task-date">Deadline Date</label>
               <input
+                id="task-date"
+                name="deadlineDate"
                 type="date"
                 value={deadlineDate}
                 onChange={(e) => setDeadlineDate(e.target.value)}
               />
             </div>
             <div className={styles.field}>
-              <label>Deadline Time</label>
+              <label htmlFor="task-time">Deadline Time</label>
               <input
+                id="task-time"
+                name="deadlineTime"
                 type="time"
                 value={deadlineTime}
                 onChange={(e) => setDeadlineTime(e.target.value)}
@@ -104,6 +112,8 @@ const AddTask: React.FC<AddTaskProps> = ({ onAdd }) => {
             <div className={styles.timerRow}>
               <div className={styles.inputGroup}>
                 <input
+                  id="timer-hours"
+                  name="timerHours"
                   type="number"
                   min="0"
                   placeholder="0"
@@ -115,6 +125,8 @@ const AddTask: React.FC<AddTaskProps> = ({ onAdd }) => {
               </div>
               <div className={styles.inputGroup}>
                 <input
+                  id="timer-minutes"
+                  name="timerMinutes"
                   type="number"
                   min="0"
                   max="59"

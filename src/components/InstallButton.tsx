@@ -12,6 +12,7 @@ const InstallButton: React.FC = () => {
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
+      console.log('beforeinstallprompt event fired');
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
     };
@@ -19,12 +20,18 @@ const InstallButton: React.FC = () => {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
     // Check if app is already running as standalone
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setIsInstalled(true);
-    }
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    console.log('Is standalone:', isStandalone);
+    setIsInstalled(isStandalone);
 
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
   }, []);
+
+  // Debugging logs
+  useEffect(() => {
+    console.log('Deferred prompt state:', deferredPrompt);
+    console.log('Is installed state:', isInstalled);
+  }, [deferredPrompt, isInstalled]);
 
   const handleInstall = async () => {
     if (!deferredPrompt) return;
