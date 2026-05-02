@@ -35,7 +35,7 @@
 .checkboxActive {
   background-color: var(--accent-green);
   border-color: var(--accent-green);
-  color: white;
+  color: var(--bg-color);
 }
 
 .content {
@@ -285,8 +285,8 @@
 }
 
 .saveBtn {
-  background-color: var(--text-main);
-  color: var(--bg-color);
+  background-color: var(--bg-card);
+  color: var(--text-main);
   padding: 8px 24px;
   font-size: 0.875rem;
   font-weight: 600;
