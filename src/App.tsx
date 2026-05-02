@@ -9,6 +9,7 @@ import FocusMode from './components/FocusMode';
 import CommandPalette from './components/CommandPalette';
 import GardenDrawer from './components/GardenDrawer';
 import IntentionScreen from './components/IntentionScreen';
+import SplashScreen from './components/SplashScreen';
 import { Sprout, Sun, Moon } from 'lucide-react';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
     toggleTimer
   } = useTasks();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [focusState, setFocusState] = useState<{ id: string; rect: DOMRect } | null>(null);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [isGardenOpen, setIsGardenOpen] = useState(false);
@@ -35,6 +37,11 @@ function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  if (isLoading) {
+    return <SplashScreen onComplete={() => setIsLoading(false)} />;
+  }
+
 
   useEffect(() => {
     const today = new Date().toDateString();
