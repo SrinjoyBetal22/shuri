@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTasks } from './hooks/useTasks';
 import { useGarden } from './hooks/gardenStore';
+import type { FilterType } from './types/task';
 import styles from './App.module.css';
 import AddTask from './components/AddTask';
 import TaskList from './components/TaskList';
