@@ -60,7 +60,7 @@ button:hover {
 input, textarea {
   font-family: inherit;
   border: 1px solid var(--border-color);
-  background: #333333;
+  background: var(--bg-card);
   color: var(--text-main);
   padding: var(--spacing-sm);
   outline: none;

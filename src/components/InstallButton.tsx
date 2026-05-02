@@ -8,7 +8,7 @@ interface BeforeInstallPromptEvent extends Event {
 
 const InstallButton: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isInstalled, setIsInstalled] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(window.matchMedia('(display-mode: standalone)').matches);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -18,11 +18,6 @@ const InstallButton: React.FC = () => {
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
-    // Check if app is already running as standalone
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    console.log('Is standalone:', isStandalone);
-    setIsInstalled(isStandalone);
 
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
   }, []);
