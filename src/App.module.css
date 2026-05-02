@@ -1,11 +1,11 @@
 .container {
   max-width: 600px;
   margin: 0 auto;
-  padding: var(--spacing-xl) var(--spacing-md);
+  padding: var(--spacing-md);
   display: flex;
-  vertical-direction: column;
   flex-direction: column;
   gap: var(--spacing-lg);
+  min-height: 100vh;
 }
 
 .header {
