@@ -1,0 +1,309 @@
+.taskCard {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-md) calc(var(--spacing-md) + 6px);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  align-items: flex-start;
+  transition: transform 0.1s ease, border-color 0.2s ease;
+  position: relative;
+}
+
+.taskCard:hover, .focused {
+  border-color: var(--text-subtle);
+}
+
+.focused {
+  border-color: var(--text-main);
+  transform: scale(1.01);
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  background: transparent;
+  transition: all 0.2s ease;
+  color: var(--text-main);
+}
+
+.checkboxActive {
+  background-color: var(--accent-green);
+  border-color: var(--accent-green);
+  color: white;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: var(--text-subtle);
+}
+
+.description {
+  font-size: 0.875rem;
+  color: var(--text-subtle);
+}
+
+.meta {
+  display: flex;
+  gap: var(--spacing-md);
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.timerContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.timerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.timerDisplay {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', monospace;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+}
+
+.timerToggle {
+  color: var(--text-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.timerToggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+}
+
+.timerActive {
+  color: var(--accent-orange);
+}
+
+.timerStats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--text-subtle);
+}
+
+.progressBarWrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0 var(--spacing-md);
+  box-sizing: border-box;
+}
+
+.progressBarContainer {
+  height: 2px;
+  background-color: var(--border-color);
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1px;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: var(--text-main);
+  transition: width 1s linear;
+}
+
+.progressBarExpired {
+  background-color: var(--accent-red);
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+}
+
+.actionBtn {
+  color: var(--text-subtle);
+  padding: 4px;
+}
+
+.actionBtn:hover {
+  color: var(--text-main);
+}
+
+.statusIndicator {
+  width: 4px;
+  align-self: stretch;
+  margin-left: -1rem;
+  margin-right: calc(1rem - 4px);
+}
+
+.statusOverdue { background-color: var(--accent-red); }
+.statusToday { background-color: var(--accent-orange); }
+.statusSoon { background-color: var(--accent-yellow); }
+.statusCompleted { background-color: var(--accent-green); }
+.statusAll { background-color: var(--border-color); }
+
+@keyframes dissolve {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.95); }
+}
+
+.isCompleting {
+  animation: dissolve 0.5s ease-out forwards;
+}
+
+.editing {
+  border-color: var(--text-main);
+  background-color: var(--bg-card);
+  padding: var(--spacing-lg);
+}
+
+.editForm {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+.editTitleInput {
+  grid-column: span 2;
+  font-size: 1.25rem;
+  font-weight: 600;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  padding: 8px 0;
+  width: 100%;
+  background: transparent;
+  color: var(--text-main);
+}
+
+.editTextarea {
+  grid-column: span 2;
+  font-size: 0.9375rem;
+  border: 1px solid var(--border-color);
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--text-main);
+  min-height: 80px;
+  resize: vertical;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.editMetaRow {
+  display: flex;
+  gap: var(--spacing-md);
+  grid-column: span 2;
+}
+
+.editField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.editField label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  letter-spacing: 0.1em;
+}
+
+.editField input {
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.timerInputs {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inputGroup span {
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+}
+
+.timerInputs input {
+  width: 50px;
+  padding: 8px;
+}
+
+.editActions {
+  grid-column: span 2;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.saveBtn {
+  background-color: var(--text-main);
+  color: var(--bg-color);
+  padding: 8px 24px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.cancelBtn {
+  color: var(--text-subtle);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+@media (max-width: 600px) {
+  .taskCard {
+    padding: var(--spacing-sm);
+    gap: 8px;
+  }
+}

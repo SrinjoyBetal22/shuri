@@ -1,0 +1,111 @@
+.addTask {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+}
+
+.titleInput {
+  border: none;
+  font-size: 1.125rem;
+  padding: 0;
+  width: 100%;
+  background: transparent;
+  color: var(--text-main);
+}
+
+.titleInput::placeholder {
+  color: var(--text-subtle);
+}
+
+.optionalFields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-color);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timerPresets {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.timerPresets button {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-subtle);
+  border: 1px solid var(--border-color);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.timerPresets button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  border-color: var(--text-subtle);
+}
+
+.textarea {
+  resize: none;
+  min-height: 80px;
+}
+
+.timerRow {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inputGroup span {
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+}
+
+.timerInput {
+  width: 60px;
+}
+
+.multiFieldRow {
+  display: flex;
+  gap: var(--spacing-lg);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.expandBtn {
+  font-size: 0.875rem;
+  color: var(--text-subtle);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.submitBtn {
+  background-color: var(--text-main);
+  color: var(--bg-color);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
