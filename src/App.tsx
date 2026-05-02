@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useTasks } from './hooks/useTasks';
 import { useGarden } from './hooks/gardenStore';
 import styles from './App.module.css';
-import type { FilterType } from './types/task';
 import AddTask from './components/AddTask';
 import TaskList from './components/TaskList';
 import FocusMode from './components/FocusMode';
@@ -28,25 +27,30 @@ function App() {
   const [focusState, setFocusState] = useState<{ id: string; rect: DOMRect } | null>(null);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [isGardenOpen, setIsGardenOpen] = useState(false);
-  const [intention, setIntention] = useState<string | null>(null);
-  const [hasShownIntention, setHasShownIntention] = useState(false);
+  const [intention, setIntention] = useState<string | null>(() => {
+    const today = new Date().toDateString();
+    const lastDate = localStorage.getItem('shuri-last-date');
+    const storedIntention = localStorage.getItem('shuri-intention');
+    return lastDate === today ? storedIntention : null;
+  });
+  const [hasShownIntention, setHasShownIntention] = useState(() => {
+    const today = new Date().toDateString();
+    const lastDate = localStorage.getItem('shuri-last-date');
+    return lastDate === today && !!localStorage.getItem('shuri-intention');
+  });
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  const filters: { label: FilterType; dotClass: string }[] = [
+    { label: 'All', dotClass: styles.dotAll },
+    { label: 'Overdue', dotClass: styles.dotOverdue },
+    { label: 'Due Today', dotClass: styles.dotToday },
+    { label: 'Due Soon', dotClass: styles.dotSoon },
+    { label: 'Completed', dotClass: styles.dotCompleted },
+  ];
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
-
-  useEffect(() => {
-    const today = new Date().toDateString();
-    const lastDate = localStorage.getItem('shuri-last-date');
-    const storedIntention = localStorage.getItem('shuri-intention');
-
-    if (lastDate === today && storedIntention) {
-      setIntention(storedIntention);
-      setHasShownIntention(true);
-    }
-  }, []);
 
   const handleSetIntention = (text: string) => {
     const today = new Date().toDateString();
@@ -54,6 +58,10 @@ function App() {
     localStorage.setItem('shuri-intention', text);
     setIntention(text);
     setHasShownIntention(true);
+  };
+
+  const handleFocus = (id: string, rect: DOMRect) => {
+    setFocusState({ id, rect });
   };
 
   useEffect(() => {
@@ -74,20 +82,6 @@ function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [focusedIndex, filteredTasks]);
-
-  const filters: { label: FilterType; dotClass: string }[] = [
-    { label: 'All', dotClass: styles.dotAll },
-    { label: 'Overdue', dotClass: styles.dotOverdue },
-    { label: 'Due Today', dotClass: styles.dotToday },
-    { label: 'Due Soon', dotClass: styles.dotSoon },
-    { label: 'Completed', dotClass: styles.dotCompleted },
-  ];
-
-  const focusedTask = filteredTasks.find(t => t.id === focusState?.id);
-
-  const handleFocus = (id: string, rect: DOMRect) => {
-    setFocusState({ id, rect });
-  };
 
   return (
     <div className={styles.container}>
@@ -161,19 +155,22 @@ function App() {
         <GardenDrawer onClose={() => setIsGardenOpen(false)} />
       )}
 
-      {focusState && focusedTask && (
-        <FocusMode 
-          task={focusedTask} 
-          startRect={focusState.rect}
-          onExit={() => setFocusState(null)} 
-          onToggleTimer={() => toggleTimer(focusedTask.id)}
-          onToggleComplete={() => {
-            toggleComplete(focusedTask.id);
-            incrementSessions();
-            setFocusState(null);
-          }}
-        />
-      )}
+      {(() => {
+        const focusedTask = focusState ? filteredTasks.find(t => t.id === focusState.id) : null;
+        return focusState && focusedTask && (
+          <FocusMode 
+            task={focusedTask} 
+            startRect={focusState.rect}
+            onExit={() => setFocusState(null)} 
+            onToggleTimer={() => toggleTimer(focusedTask.id)}
+            onToggleComplete={() => {
+              toggleComplete(focusedTask.id);
+              incrementSessions();
+              setFocusState(null);
+            }}
+          />
+        );
+      })()}
     </div>
   );
 }
