@@ -25,7 +25,7 @@ function App() {
     toggleTimer
   } = useTasks();
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
   const [focusState, setFocusState] = useState<{ id: string; rect: DOMRect } | null>(null);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [isGardenOpen, setIsGardenOpen] = useState(false);
@@ -48,10 +48,6 @@ function App() {
       setHasShownIntention(true);
     }
   }, []);
-
-  if (isLoading) {
-    return <SplashScreen onComplete={() => setIsLoading(false)} />;
-  }
 
   const handleSetIntention = (text: string) => {
     const today = new Date().toDateString();
@@ -95,8 +91,10 @@ function App() {
   };
 
   return (
-    <div className={styles.container}>
-      {!hasShownIntention && <IntentionScreen onSetIntention={handleSetIntention} />}
+    <>
+      {isSplashVisible && <SplashScreen onComplete={() => setIsSplashVisible(false)} />}
+      <div className={styles.container}>
+        {!hasShownIntention && <IntentionScreen onSetIntention={handleSetIntention} />}
       <header className={styles.header}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           <div>
