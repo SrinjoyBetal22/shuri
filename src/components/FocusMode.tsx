@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Play, Pause, Clock, Check } from 'lucide-react';
+import { X, Play, Pause, Check } from 'lucide-react';
 import type { Task } from '../types/task';
 import styles from './FocusMode.module.css';
 

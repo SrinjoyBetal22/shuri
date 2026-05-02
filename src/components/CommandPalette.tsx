@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import styles from './CommandPalette.module.css';
 
 interface CommandPaletteProps {
