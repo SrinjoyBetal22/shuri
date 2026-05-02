@@ -9,6 +9,7 @@ import FocusMode from './components/FocusMode';
 import CommandPalette from './components/CommandPalette';
 import GardenDrawer from './components/GardenDrawer';
 import IntentionScreen from './components/IntentionScreen';
+import InstallButton from './components/InstallButton';
 import { Sprout, Sun, Moon } from 'lucide-react';
 
 function App() {
@@ -97,7 +98,8 @@ function App() {
             <h1 className={styles.title}>Shūri</h1>
             <p className={styles.subtitle}>Clarity in Motion</p>
           </div>
-          <div style={{ display: 'flex', gap: '16px' }}>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+            <InstallButton />
             <button onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')} style={{ color: 'var(--text-subtle)' }}>
               {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
             </button>
