@@ -123,7 +123,7 @@
   margin-right: 6px;
 }
 
-.dotAll { background-color: var(--accent-grey); }
+.dotAll { background-color: var(--text-main); }
 .dotOverdue { background-color: var(--accent-red); }
 .dotToday { background-color: var(--accent-orange); }
 .dotSoon { background-color: var(--accent-yellow); }

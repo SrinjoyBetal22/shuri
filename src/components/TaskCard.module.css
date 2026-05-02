@@ -117,7 +117,7 @@
 }
 
 .timerActive {
-  color: var(--accent-orange);
+  color: var(--text-main);
 }
 
 .timerStats {
