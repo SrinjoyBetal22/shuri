@@ -22,7 +22,7 @@ export default defineConfig({
             src: 'icon.svg',
             sizes: '512x512',
             type: 'image/svg+xml',
-            purpose: 'maskable'
+            purpose: 'any'
           }
         ]
       }
