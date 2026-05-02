@@ -9,7 +9,6 @@ import FocusMode from './components/FocusMode';
 import CommandPalette from './components/CommandPalette';
 import GardenDrawer from './components/GardenDrawer';
 import IntentionScreen from './components/IntentionScreen';
-import SplashScreen from './components/SplashScreen';
 import { Sprout, Sun, Moon } from 'lucide-react';
 
 function App() {
@@ -25,7 +24,6 @@ function App() {
     toggleTimer
   } = useTasks();
 
-  const [isSplashVisible, setIsSplashVisible] = useState(true);
   const [focusState, setFocusState] = useState<{ id: string; rect: DOMRect } | null>(null);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [isGardenOpen, setIsGardenOpen] = useState(false);
@@ -91,10 +89,8 @@ function App() {
   };
 
   return (
-    <>
-      {isSplashVisible && <SplashScreen onComplete={() => setIsSplashVisible(false)} />}
-      <div className={styles.container}>
-        {!hasShownIntention && <IntentionScreen onSetIntention={handleSetIntention} />}
+    <div className={styles.container}>
+      {!hasShownIntention && <IntentionScreen onSetIntention={handleSetIntention} />}
       <header className={styles.header}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           <div>
