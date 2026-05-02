@@ -38,11 +38,6 @@ function App() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  if (isLoading) {
-    return <SplashScreen onComplete={() => setIsLoading(false)} />;
-  }
-
-
   useEffect(() => {
     const today = new Date().toDateString();
     const lastDate = localStorage.getItem('shuri-last-date');
@@ -53,6 +48,10 @@ function App() {
       setHasShownIntention(true);
     }
   }, []);
+
+  if (isLoading) {
+    return <SplashScreen onComplete={() => setIsLoading(false)} />;
+  }
 
   const handleSetIntention = (text: string) => {
     const today = new Date().toDateString();
