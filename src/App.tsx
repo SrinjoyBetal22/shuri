@@ -25,7 +25,7 @@ function App() {
     toggleTimer
   } = useTasks();
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [focusState, setFocusState] = useState<{ id: string; rect: DOMRect } | null>(null);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [isGardenOpen, setIsGardenOpen] = useState(false);
