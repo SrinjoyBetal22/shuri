@@ -2,6 +2,7 @@ export interface Task {
   id: string;
   title: string;
   description?: string;
+  tags?: string[];
   deadline?: string; // ISO string
   timer?: {
     hours: number;

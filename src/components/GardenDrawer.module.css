@@ -1,11 +1,19 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(4px);
   z-index: 2000;
   display: flex;
   justify-content: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.overlayVisible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .drawer {
@@ -18,17 +26,44 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drawerOpen {
+  transform: translateX(0);
 }
 
 .closeBtn {
   align-self: flex-end;
   color: var(--text-subtle);
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+}
+
+.closeBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.headerIcon {
+  opacity: 0.8;
 }
 
 .stats {
   font-size: 0.9rem;
   color: var(--text-subtle);
   margin-bottom: 16px;
+  text-align: center;
 }
 
 .grid {
@@ -45,10 +80,17 @@
   align-items: center;
   gap: 8px;
   opacity: 0.3;
+  border-radius: 12px;
 }
 
 .unlocked {
   opacity: 1;
   border-color: var(--accent-green);
   color: var(--accent-green);
+  background: rgba(81, 120, 85, 0.05);
+}
+
+.locked {
+  font-size: 1.5rem;
+  color: var(--text-subtle);
 }

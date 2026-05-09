@@ -38,7 +38,11 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onToggle, onDelete, onUpdate
   return (
     <div className={styles.taskList}>
       {tasks.map((task, index) => (
-        <div key={task.id} onClick={() => handleTaskClick(task)} style={{ opacity: isStale(task) ? 0.4 : 1, transition: 'opacity 0.3s' }}>
+        <div 
+          key={task.id}
+          onClick={() => handleTaskClick(task)}
+          style={{ opacity: isStale(task) ? 0.4 : 1, marginBottom: '16px' }}
+        >
           <TaskCard 
             task={task} 
             onToggle={onToggle} 
@@ -55,3 +59,4 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onToggle, onDelete, onUpdate
 };
 
 export default TaskList;
+

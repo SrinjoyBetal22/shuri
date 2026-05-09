@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock } from 'lucide-react';
+import { Clock } from '@phosphor-icons/react';
 import styles from './TaskCard.module.css';
 
 interface TaskTimerProps {
@@ -25,10 +25,11 @@ const TaskTimer: React.FC<TaskTimerProps> = ({ initialHours, initialMinutes }) =
 
   return (
     <div className={styles.metaItem}>
-      <Clock size={12} className={timeLeft === 0 ? styles.timerExpired : ''} />
+      <Clock size={12} weight="light" className={timeLeft === 0 ? styles.timerExpired : ''} />
       <span>{h}h {m}m</span>
     </div>
   );
 };
 
 export default TaskTimer;
+

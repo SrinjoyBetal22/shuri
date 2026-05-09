@@ -1,0 +1,102 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.5s forwards;
+}
+
+.container {
+  background: var(--bg-color);
+  width: 100%;
+  max-width: 500px;
+  padding: var(--spacing-xl);
+  border: 1px solid var(--border-color);
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.closeBtn {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  color: var(--text-subtle);
+}
+
+.icon {
+  color: var(--accent-orange);
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  justify-content: center;
+}
+
+.title {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-xl);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.haiku {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.25rem;
+  font-style: italic;
+  margin-bottom: var(--spacing-xl);
+  line-height: 2;
+  color: var(--text-main);
+}
+
+.haiku p {
+  margin: 0;
+}
+
+.stats {
+  font-size: 0.9rem;
+  color: var(--text-subtle);
+  margin-bottom: var(--spacing-lg);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--border-color);
+}
+
+.taskList {
+  max-height: 150px;
+  overflow-y: auto;
+  text-align: left;
+  padding: 0 var(--spacing-md);
+  scrollbar-width: none;
+}
+
+.taskList::-webkit-scrollbar {
+  display: none;
+}
+
+.taskItem {
+  font-size: 0.85rem;
+  color: var(--text-subtle);
+  margin-bottom: 8px;
+  display: flex;
+  gap: 12px;
+}
+
+.bullet {
+  color: var(--accent-orange);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

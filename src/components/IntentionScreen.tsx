@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import JapanPictogram from './JapanPictogram';
 import styles from './IntentionScreen.module.css';
 
 interface IntentionScreenProps {
@@ -16,6 +17,7 @@ const IntentionScreen: React.FC<IntentionScreenProps> = ({ onSetIntention }) => 
   return (
     <div className={styles.overlay}>
       <div className={styles.content}>
+        <JapanPictogram name="fuji-san" size={64} className={styles.icon} />
         <h1 className={styles.title}>What is your clarity for today?</h1>
         <form onSubmit={handleSubmit}>
           <input
@@ -33,3 +35,4 @@ const IntentionScreen: React.FC<IntentionScreenProps> = ({ onSetIntention }) => 
 };
 
 export default IntentionScreen;
+

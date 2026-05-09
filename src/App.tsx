@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTasks } from './hooks/useTasks';
 import { useGarden } from './hooks/gardenStore';
+import { zenMusic } from './hooks/zenMusic';
 import type { FilterType } from './types/task';
 import styles from './App.module.css';
 import AddTask from './components/AddTask';
@@ -9,15 +10,20 @@ import FocusMode from './components/FocusMode';
 import CommandPalette from './components/CommandPalette';
 import GardenDrawer from './components/GardenDrawer';
 import IntentionScreen from './components/IntentionScreen';
-import InstallButton from './components/InstallButton';
-import { Sprout, Sun, Moon } from 'lucide-react';
+import SettingsMenu from './components/SettingsMenu';
+import TagFilter from './components/TagFilter';
+import HaikuReflection from './components/HaikuReflection';
+import { Gear, Hexagon } from '@phosphor-icons/react';
 
 function App() {
   const { incrementSessions } = useGarden();
   const { 
     filter, 
     setFilter, 
+    selectedTag,
+    setSelectedTag,
     filteredTasks, 
+    tasks,
     addTask, 
     toggleComplete, 
     deleteTask,
@@ -28,6 +34,18 @@ function App() {
   const [focusState, setFocusState] = useState<{ id: string; rect: DOMRect } | null>(null);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [isGardenOpen, setIsGardenOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isHaikuOpen, setIsHaikuOpen] = useState(false);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+
+  const toggleAudio = () => {
+    if (isAudioPlaying) {
+      zenMusic.pause();
+    } else {
+      zenMusic.play();
+    }
+    setIsAudioPlaying(!isAudioPlaying);
+  };
   const [intention, setIntention] = useState<string | null>(() => {
     const today = new Date().toDateString();
     const lastDate = localStorage.getItem('shuri-last-date');
@@ -40,7 +58,9 @@ function App() {
     return lastDate === today && !!localStorage.getItem('shuri-intention');
   });
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+
   const [focusedIndex, setFocusedIndex] = useState(-1);
+
   const filters: { label: FilterType; dotClass: string }[] = [
     { label: 'All', dotClass: styles.dotAll },
     { label: 'Overdue', dotClass: styles.dotOverdue },
@@ -48,6 +68,8 @@ function App() {
     { label: 'Due Soon', dotClass: styles.dotSoon },
     { label: 'Completed', dotClass: styles.dotCompleted },
   ];
+
+  const allTags = Array.from(new Set(tasks.flatMap(t => t.tags || [])));
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -87,19 +109,19 @@ function App() {
   return (
     <div className={styles.container}>
       {!hasShownIntention && <IntentionScreen onSetIntention={handleSetIntention} />}
-      <header className={styles.header}>
+      <header className={styles.header} style={{ position: 'relative', zIndex: 10 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           <div>
             <h1 className={styles.title}>Shūri</h1>
             <p className={styles.subtitle}>Clarity in Motion</p>
           </div>
           <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-            <InstallButton />
-            <button onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')} style={{ color: 'var(--text-subtle)' }}>
-              {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
-            </button>
-            <button onClick={() => setIsGardenOpen(true)} style={{ color: 'var(--text-subtle)' }}>
-              <Sprout size={24} />
+            <button 
+              className={styles.gardenBtn} 
+              onClick={() => setIsSettingsOpen(true)} 
+              title="Settings"
+            >
+              <Gear size={24} weight="light" />
             </button>
           </div>
         </div>
@@ -113,22 +135,31 @@ function App() {
       <main className={styles.main}>
         <AddTask onAdd={addTask} />
 
-        <nav className={styles.tabs}>
-          {filters.map((f) => (
-            <button
-              key={f.label}
-              title={f.label}
-              className={`${styles.tab} ${filter === f.label ? styles.tabActive : ''}`}
-              onClick={() => setFilter(f.label)}
-            >
-              <span className={`${styles.dot} ${f.dotClass}`} />
-              <span className={styles.tabText}>{f.label}</span>
-            </button>
-          ))}
-        </nav>
+        <div className={styles.filterContainer}>
+          <nav className={styles.tabs}>
+            {filters.map((f) => (
+              <button
+                key={f.label}
+                title={f.label}
+                className={`${styles.tab} ${filter === f.label && !selectedTag ? styles.tabActive : ''}`}
+                onClick={() => { setFilter(f.label); setSelectedTag(null); }}
+              >
+                <Hexagon size={12} weight="fill" className={`${styles.filterIcon} ${f.dotClass}`} />
+                <span className={styles.tabText}>{f.label}</span>
+              </button>
+            ))}
+          </nav>
+          {allTags.length > 0 && (
+            <TagFilter 
+              tags={allTags} 
+              selectedTag={selectedTag} 
+              onSelect={(tag) => { setSelectedTag(tag); setFilter('All'); }} 
+            />
+          )}
+        </div>
         
         <div className={styles.listHeader}>
-          <span className={styles.listTitle}>{filter} Tasks</span>
+          <span className={styles.listTitle}>{selectedTag ? `Tag: ${selectedTag}` : filter} Tasks</span>
           <span className={styles.count}>
             {filteredTasks.length} {filteredTasks.length === 1 ? 'item' : 'items'}
           </span>
@@ -152,8 +183,35 @@ function App() {
         />
       )}
 
+      {isSettingsOpen && (
+        <SettingsMenu 
+          intention={intention}
+          onUpdateIntention={handleSetIntention}
+          theme={theme}
+          onToggleTheme={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
+          isAudioPlaying={isAudioPlaying}
+          onToggleAudio={toggleAudio}
+          onOpenHaiku={() => setIsHaikuOpen(true)}
+          onOpenGarden={() => setIsGardenOpen(true)}
+          onInstallPWA={() => {
+            const event = window.localStorage.getItem('deferredPrompt');
+            if (event) {
+              (JSON.parse(event) as any).prompt();
+            }
+          }}
+          onClose={() => setIsSettingsOpen(false)}
+        />
+      )}
+
       {isGardenOpen && (
         <GardenDrawer onClose={() => setIsGardenOpen(false)} />
+      )}
+
+      {isHaikuOpen && (
+        <HaikuReflection 
+          tasks={tasks} 
+          onClose={() => setIsHaikuOpen(false)} 
+        />
       )}
 
       {(() => {

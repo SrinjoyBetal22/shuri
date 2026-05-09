@@ -65,14 +65,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-xl);
+  gap: var(--spacing-md);
   text-align: center;
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .title {
@@ -88,11 +88,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-sm);
 }
 
 .timeText {
-  font-size: 6rem;
+  font-size: 5rem;
   font-weight: 200;
   font-family: 'Inter', monospace;
   font-variant-numeric: tabular-nums;
@@ -117,7 +117,7 @@
 }
 
 .timerControls {
-  margin: var(--spacing-md) 0;
+  margin: var(--spacing-sm) 0;
 }
 
 .playPauseBtn {
@@ -150,13 +150,13 @@
 }
 
 .completeBtn {
-  margin-top: var(--spacing-lg);
+  margin-top: var(--spacing-md);
   display: flex;
   align-items: center;
   gap: 8px;
   background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-subtle);
+  border: 1px solid var(--text-main);
+  color: var(--text-main);
   padding: 0.5rem 1.5rem;
   font-size: 0.75rem;
   font-weight: 500;
@@ -167,8 +167,8 @@
 }
 
 .completeBtn:hover {
-  border-color: var(--text-main);
-  color: var(--text-main);
+  background-color: var(--text-main);
+  color: var(--bg-color);
 }
 
 @keyframes pulse {

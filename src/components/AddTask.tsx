@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { ChevronUp, Plus } from 'lucide-react';
+import { CaretUp, Plus } from '@phosphor-icons/react';
 import styles from './AddTask.module.css';
 
 interface AddTaskProps {
   onAdd: (task: {
     title: string;
     description?: string;
+    tags?: string[];
     deadline?: string;
     timer?: { hours: number; minutes: number; remainingSeconds: number; isActive: boolean };
   }) => void;
@@ -15,6 +16,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onAdd }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [tags, setTags] = useState('');
   const [deadlineDate, setDeadlineDate] = useState('');
   const [deadlineTime, setDeadlineTime] = useState('');
   const [timerHours, setTimerHours] = useState<number>(0);
@@ -31,10 +33,12 @@ const AddTask: React.FC<AddTaskProps> = ({ onAdd }) => {
     }
 
     const totalSeconds = (timerHours * 3600) + (timerMinutes * 60);
+    const tagArray = tags ? tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '') : undefined;
 
     onAdd({
       title,
       description: description || undefined,
+      tags: tagArray,
       deadline: deadlineIso,
       timer: totalSeconds > 0 ? { 
         hours: timerHours, 
@@ -46,6 +50,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onAdd }) => {
 
     setTitle('');
     setDescription('');
+    setTags('');
     setDeadlineDate('');
     setDeadlineTime('');
     setTimerHours(0);
@@ -76,6 +81,19 @@ const AddTask: React.FC<AddTaskProps> = ({ onAdd }) => {
               className={styles.textarea}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label htmlFor="task-tags">Tags (comma separated)</label>
+            <input
+              id="task-tags"
+              name="tags"
+              type="text"
+              placeholder="work, project, urgent"
+              className={styles.tagInput}
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
             />
           </div>
 
@@ -148,7 +166,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onAdd }) => {
           className={styles.expandBtn}
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          {isExpanded ? <ChevronUp size={16} /> : <Plus size={16} />}
+          {isExpanded ? <CaretUp size={16} weight="light" /> : <Plus size={16} weight="light" />}
           {isExpanded ? 'Less' : 'More Details'}
         </button>
         <button type="submit" className={styles.submitBtn}>

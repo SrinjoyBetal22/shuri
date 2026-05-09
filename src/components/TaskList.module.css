@@ -1,8 +1,10 @@
 .taskList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
+  display: block;
   margin-top: var(--spacing-md);
+}
+
+.taskList > div {
+  margin-bottom: var(--spacing-md);
 }
 
 .empty {

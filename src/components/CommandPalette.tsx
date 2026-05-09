@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Search } from 'lucide-react';
+import { MagnifyingGlass } from '@phosphor-icons/react';
 import styles from './CommandPalette.module.css';
 
 interface CommandPaletteProps {
@@ -31,7 +31,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ onAdd, onClose }) => {
       <div className={styles.palette} onClick={(e) => e.stopPropagation()}>
         <form onSubmit={handleSubmit}>
           <div className={styles.inputWrapper}>
-            <Search size={20} className={styles.icon} />
+            <MagnifyingGlass size={20} weight="light" className={styles.icon} />
             <input
               autoFocus
               type="text"
@@ -52,3 +52,4 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ onAdd, onClose }) => {
 };
 
 export default CommandPalette;
+

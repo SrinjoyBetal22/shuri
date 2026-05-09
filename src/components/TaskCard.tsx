@@ -1,5 +1,15 @@
 import React, { useState, useRef } from 'react';
-import { Check, Calendar, Trash2, Edit2, X, Play, Pause, Clock, Focus } from 'lucide-react';
+import { 
+  Check, 
+  Calendar, 
+  Trash, 
+  PencilSimple, 
+  X, 
+  Play, 
+  Pause, 
+  Clock, 
+  CornersOut
+} from '@phosphor-icons/react';
 import type { Task } from '../types/task';
 import styles from './TaskCard.module.css';
 
@@ -19,6 +29,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, onDelete, onUpdate,
   const [isCompleting, setIsCompleting] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDesc, setEditDesc] = useState(task.description || '');
+  const [editTags, setEditTags] = useState(task.tags?.join(', ') || '');
   
   const initialDate = task.deadline ? task.deadline.split('T')[0] : '';
   const initialTime = task.deadline ? task.deadline.split('T')[1].substring(0, 5) : '';
@@ -64,10 +75,12 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, onDelete, onUpdate,
     }
 
     const totalSeconds = (editTimerH * 3600) + (editTimerM * 60);
+    const tagArray = editTags ? editTags.split(',').map(tag => tag.trim()).filter(tag => tag !== '') : undefined;
 
     onUpdate(task.id, {
       title: editTitle,
       description: editDesc || undefined,
+      tags: tagArray,
       deadline: deadlineIso,
       timer: totalSeconds > 0 ? { 
         hours: editTimerH, 
@@ -95,6 +108,13 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, onDelete, onUpdate,
             value={editDesc}
             onChange={(e) => setEditDesc(e.target.value)}
             placeholder="Description (optional)"
+          />
+          <input
+            type="text"
+            className={styles.editTagsInput}
+            value={editTags}
+            onChange={(e) => setEditTags(e.target.value)}
+            placeholder="Tags (comma separated)"
           />
           <div className={styles.editMetaRow}>
             <div className={styles.editField}>
@@ -139,7 +159,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, onDelete, onUpdate,
           </div>
           <div className={styles.editActions}>
             <button className={styles.cancelBtn} onClick={() => setIsEditing(false)}>
-              <X size={16} /> Cancel
+              <X size={16} weight="light" /> Cancel
             </button>
             <button className={styles.saveBtn} onClick={handleSave}>
               Save Changes
@@ -154,24 +174,46 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, onDelete, onUpdate,
   const progress = task.timer ? (task.timer.remainingSeconds / totalSeconds) * 100 : 0;
 
   return (
-    <div className={`${styles.taskCard} ${isCompleting ? styles.isCompleting : ''} ${isFocused ? styles.focused : ''}`} ref={cardRef}>
+    <div 
+      className={`
+        ${styles.taskCard} 
+        ${isCompleting ? styles.isCompleting : ''} 
+        ${isFocused ? styles.focused : ''} 
+        ${task.completed ? styles.completedCard : ''}
+      `} 
+      ref={cardRef}
+    >
       <div className={`${styles.statusIndicator} ${getStatusClass()}`} />
+      <div className={styles.kintsugiCrack} />
       
-      <button 
-        className={`${styles.checkbox} ${task.completed ? styles.checkboxActive : ''}`}
-        onClick={() => {
-          setIsCompleting(true);
-          setTimeout(() => onToggle(task.id), 500);
-        }}
-      >
-        {task.completed && <Check size={12} strokeWidth={3} />}
-      </button>
-
       <div className={styles.content}>
         <div className={styles.headerRow}>
-          <h3 className={`${styles.title} ${task.completed ? styles.completed : ''}`}>
-            {task.title}
-          </h3>
+          <div className={styles.mainTitleGroup}>
+            <button 
+              className={`${styles.checkbox} ${task.completed ? styles.checkboxActive : ''}`}
+              onClick={() => {
+                setIsCompleting(true);
+                setTimeout(() => onToggle(task.id), 350);
+              }}
+            >
+              {task.completed && <Check size={12} weight="bold" />}
+            </button>
+            
+            <h3 className={`${styles.title} ${task.completed ? styles.completed : ''}`}>
+              {task.title}
+            </h3>
+
+            {task.tags && task.tags.length > 0 && (
+              <div className={styles.tagsContainer}>
+                {task.tags.map(tag => (
+                  <span key={tag} className={styles.tag}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+          
           <div className={styles.actions}>
             <button 
               className={styles.actionBtn} 
@@ -182,10 +224,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, onDelete, onUpdate,
               }} 
               title="Focus Mode"
             >
-              <Focus size={16} />
+              <CornersOut size={16} weight="light" />
             </button>
             <button className={styles.actionBtn} onClick={() => setIsEditing(true)}>
-              <Edit2 size={16} />
+              <PencilSimple size={16} weight="light" />
             </button>
             <button 
               className={styles.actionBtn} 
@@ -195,7 +237,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, onDelete, onUpdate,
                 }
               }}
             >
-              <Trash2 size={16} />
+              <Trash size={16} weight="light" />
             </button>
           </div>
         </div>
@@ -207,34 +249,27 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, onDelete, onUpdate,
         <div className={styles.meta}>
           {task.deadline && (
             <div className={styles.metaItem}>
-              <Calendar size={12} />
+              <Calendar size={12} weight="light" />
               {formatDate(task.deadline)}
             </div>
           )}
-        </div>
 
-        {task.timer && (
-          <div className={styles.timerContainer}>
-            <div className={styles.timerTop}>
+          {task.timer && (
+            <div className={styles.timerRow}>
               <div className={styles.timerDisplay}>
-                <Clock size={14} className={task.timer.remainingSeconds === 0 ? styles.timerExpired : ''} />
-                <span>{formatSeconds(task.timer.remainingSeconds)}</span>
+                <Clock size={14} weight="light" />
+                <span>{formatSeconds(totalSeconds - task.timer.remainingSeconds)} / {formatSeconds(totalSeconds)} ({formatSeconds(task.timer.remainingSeconds)} left)</span>
               </div>
               <button 
                 className={`${styles.timerToggle} ${task.timer.isActive ? styles.timerActive : ''}`}
                 onClick={() => onToggleTimer(task.id)}
                 disabled={task.completed || task.timer.remainingSeconds === 0}
               >
-                {task.timer.isActive ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
+                {task.timer.isActive ? <Pause size={16} weight="fill" /> : <Play size={16} weight="fill" />}
               </button>
             </div>
-            
-            <div className={styles.timerStats}>
-              <span>Spent: {formatSeconds(totalSeconds - task.timer.remainingSeconds)}</span>
-              <span>Total: {formatSeconds(totalSeconds)}</span>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {task.timer && (

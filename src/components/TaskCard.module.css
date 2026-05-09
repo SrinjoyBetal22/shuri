@@ -1,22 +1,47 @@
 .taskCard {
   display: flex;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md) var(--spacing-md) calc(var(--spacing-md) + 6px);
+  padding: var(--spacing-md);
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  align-items: flex-start;
-  transition: transform 0.1s ease, border-color 0.2s ease;
   position: relative;
+  overflow: hidden;
+  transition: opacity 0.35s ease, transform 0.2s ease, border-color 0.2s ease;
+  opacity: 1;
 }
 
-.taskCard:hover, .focused {
-  border-color: var(--text-subtle);
+.isCompleting {
+  opacity: 0;
 }
 
-.focused {
-  border-color: var(--text-main);
-  transform: scale(1.01);
+.statusIndicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-left: 12px;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mainTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
 }
 
 .checkbox {
@@ -26,44 +51,102 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 2px;
   background: transparent;
   transition: all 0.2s ease;
   color: var(--text-main);
+  flex-shrink: 0;
 }
 
 .checkboxActive {
-  background-color: var(--accent-green);
-  border-color: var(--accent-green);
+  background-color: var(--accent-orange);
+  border-color: var(--accent-orange);
   color: var(--bg-color);
-}
-
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.headerRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  box-shadow: 0 0 8px rgba(214, 160, 85, 0.4);
 }
 
 .title {
   font-size: 1rem;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
 }
 
 .completed {
-  text-decoration: line-through;
   color: var(--text-subtle);
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.completed::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 55%;
+  height: 1.5px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--accent-orange) 20%, 
+    #f3d0a2 50%, 
+    var(--accent-orange) 80%, 
+    transparent 100%
+  );
+  transform: translateY(-50%) rotate(-0.5deg);
+  opacity: 0.6;
+  pointer-events: none;
+  filter: blur(0.2px);
+}
+
+.kintsugiCrack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M10,20 C30,15 40,25 60,20 S80,30 95,15' fill='none' stroke='%23D6A055' stroke-width='0.2' opacity='0.3'/%3E%3Cpath d='M40,0 C45,30 35,60 40,100' fill='none' stroke='%23D6A055' stroke-width='0.15' opacity='0.2'/%3E%3C/svg%3E");
+  background-size: cover;
+}
+
+.completedCard {
+  border-color: rgba(214, 160, 85, 0.3) !important;
+  background: linear-gradient(135deg, var(--bg-card), rgba(214, 160, 85, 0.02));
+}
+
+.completedCard .kintsugiCrack {
+  opacity: 1;
 }
 
 .description {
   font-size: 0.875rem;
   color: var(--text-subtle);
+  margin: 0;
+}
+
+.tagsContainer {
+  display: flex;
+  gap: 4px;
+}
+
+.tag {
+  font-size: 0.65rem;
+  color: var(--text-subtle);
+  background: rgba(0, 0, 0, 0.05);
+  padding: 1px 6px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  white-space: nowrap;
 }
 
 .meta {
@@ -71,6 +154,7 @@
   gap: var(--spacing-md);
   font-size: 0.75rem;
   color: var(--text-subtle);
+  align-items: center;
 }
 
 .metaItem {
@@ -79,26 +163,23 @@
   gap: 4px;
 }
 
-.timerContainer {
+.timerRow {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-}
-
-.timerTop {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 12px;
 }
 
 .timerDisplay {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   font-family: 'Inter', monospace;
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
+  font-size: 0.8rem;
+}
+
+.timerRemaining {
+  opacity: 0.6;
+  font-size: 0.7rem;
 }
 
 .timerToggle {
@@ -120,20 +201,11 @@
   color: var(--text-main);
 }
 
-.timerStats {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.7rem;
-  color: var(--text-subtle);
-}
-
 .progressBarWrapper {
   position: absolute;
   bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 0 var(--spacing-md);
-  box-sizing: border-box;
+  left: 4px;
+  width: calc(100% - 4px);
 }
 
 .progressBarContainer {
@@ -141,7 +213,6 @@
   background-color: var(--border-color);
   width: 100%;
   overflow: hidden;
-  border-radius: 1px;
 }
 
 .progressBar {
@@ -154,11 +225,6 @@
   background-color: var(--accent-red);
 }
 
-.actions {
-  display: flex;
-  gap: 4px;
-}
-
 .actionBtn {
   color: var(--text-subtle);
   padding: 4px;
@@ -168,27 +234,11 @@
   color: var(--text-main);
 }
 
-.statusIndicator {
-  width: 4px;
-  align-self: stretch;
-  margin-left: -1rem;
-  margin-right: calc(1rem - 4px);
-}
-
 .statusOverdue { background-color: var(--accent-red); }
 .statusToday { background-color: var(--accent-orange); }
 .statusSoon { background-color: var(--accent-yellow); }
 .statusCompleted { background-color: var(--accent-green); }
 .statusAll { background-color: var(--border-color); }
-
-@keyframes dissolve {
-  from { opacity: 1; transform: scale(1); }
-  to { opacity: 0; transform: scale(0.95); }
-}
-
-.isCompleting {
-  animation: dissolve 0.5s ease-out forwards;
-}
 
 .editing {
   border-color: var(--text-main);
@@ -203,7 +253,7 @@
   gap: var(--spacing-lg);
 }
 
-.editTitleInput {
+.editTitleInput, .editTagsInput {
   grid-column: span 2;
   font-size: 1.25rem;
   font-weight: 600;
@@ -213,6 +263,11 @@
   width: 100%;
   background: transparent;
   color: var(--text-main);
+}
+
+.editTagsInput {
+  font-size: 1rem;
+  font-weight: 400;
 }
 
 .editTextarea {

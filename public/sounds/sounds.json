@@ -1,0 +1,12 @@
+{
+  "rain": { "type": "ambient" },
+  "thunder": { "type": "ambient" },
+  "forest": { "type": "ambient" },
+  "wind": { "type": "ambient" },
+  "ocean": { "type": "ambient" },
+  "fire": { "type": "ambient" },
+  "coffee": { "type": "ambient" },
+  "white-noise": { "type": "ambient" },
+  "lofi": { "type": "music" },
+  "techno": { "type": "music" }
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Play, Pause, Check } from 'lucide-react';
+import { X, Play, Pause, Check } from '@phosphor-icons/react';
 import type { Task } from '../types/task';
 import styles from './FocusMode.module.css';
 
@@ -48,9 +48,16 @@ const FocusMode: React.FC<FocusModeProps> = ({ task, startRect, onExit, onToggle
   };
 
   const formatSeconds = (totalSeconds: number) => {
-    const m = Math.floor(totalSeconds / 60);
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
     const s = totalSeconds % 60;
-    return `${m}:${s.toString().padStart(2, '0')}`;
+    
+    const parts = [
+        h.toString().padStart(2, '0'),
+        m.toString().padStart(2, '0'),
+        s.toString().padStart(2, '0')
+    ];
+    return parts.join(':');
   };
 
   const totalSeconds = task.timer ? (task.timer.hours * 3600 + task.timer.minutes * 60) : 0;
@@ -83,12 +90,13 @@ const FocusMode: React.FC<FocusModeProps> = ({ task, startRect, onExit, onToggle
     >
       <div className={`${styles.contentWrapper} ${!showContent ? styles.hidden : ''}`}>
         <button className={styles.exitBtn} onClick={handleExit}>
-          <X size={24} />
+          <X size={24} weight="light" />
         </button>
 
         <div className={styles.focusContainer}>
           <div className={styles.content}>
             <h2 className={styles.title}>{task.title}</h2>
+            {task.description && <p className={styles.description}>{task.description}</p>}
           </div>
 
           {task.timer && (
@@ -110,7 +118,7 @@ const FocusMode: React.FC<FocusModeProps> = ({ task, startRect, onExit, onToggle
                   onClick={onToggleTimer}
                   disabled={task.timer.remainingSeconds === 0}
                 >
-                  {task.timer.isActive ? <Pause size={48} fill="currentColor" /> : <Play size={48} fill="currentColor" />}
+                  {task.timer.isActive ? <Pause size={48} weight="fill" /> : <Play size={48} weight="fill" />}
                 </button>
               </div>
 
@@ -123,7 +131,7 @@ const FocusMode: React.FC<FocusModeProps> = ({ task, startRect, onExit, onToggle
           )}
 
           <button className={styles.completeBtn} onClick={onToggleComplete}>
-            <Check size={20} />
+            <Check size={20} weight="light" />
             Complete
           </button>
         </div>

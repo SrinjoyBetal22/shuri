@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Download } from 'lucide-react';
+import { DownloadSimple } from '@phosphor-icons/react';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -44,10 +44,11 @@ const InstallButton: React.FC = () => {
 
   return (
     <button onClick={handleInstall} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', color: 'var(--text-subtle)' }}>
-      <Download size={16} />
+      <DownloadSimple size={16} weight="light" />
       Install App
     </button>
   );
 };
 
 export default InstallButton;
+

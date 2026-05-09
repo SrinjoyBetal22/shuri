@@ -8,6 +8,7 @@ export const useTasks = () => {
   });
 
   const [filter, setFilter] = useState<FilterType>('All');
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   useEffect(() => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -117,6 +118,10 @@ export const useTasks = () => {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     return tasks.filter((task) => {
+      // 1. Tag Filtering
+      if (selectedTag && (!task.tags || !task.tags.includes(selectedTag))) return false;
+
+      // 2. Status Filtering
       if (filter === 'Completed') return task.completed;
       if (task.completed) return false;
 
@@ -140,12 +145,14 @@ export const useTasks = () => {
 
       return true;
     });
-  }, [tasks, filter]);
+  }, [tasks, filter, selectedTag]);
 
   return {
     tasks,
     filter,
     setFilter,
+    selectedTag,
+    setSelectedTag,
     filteredTasks,
     addTask,
     updateTask,

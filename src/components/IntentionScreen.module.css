@@ -23,6 +23,11 @@
   letter-spacing: 0.05em;
 }
 
+.icon {
+  margin-bottom: 2rem;
+  opacity: 0.6;
+}
+
 .input {
   width: 100%;
   background: transparent;
