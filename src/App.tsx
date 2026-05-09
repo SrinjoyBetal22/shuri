@@ -37,6 +37,23 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isHaikuOpen, setIsHaikuOpen] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any | null>(null);
+  const [isInstalled, setIsInstalled] = useState(window.matchMedia('(display-mode: standalone)').matches);
+
+  useEffect(() => {
+    const handler = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  useEffect(() => {
+    const handler = (e: MediaQueryListEvent) => setIsInstalled(e.matches);
+    window.matchMedia('(display-mode: standalone)').addEventListener('change', handler);
+    return () => window.matchMedia('(display-mode: standalone)').removeEventListener('change', handler);
+  }, []);
 
   const toggleAudio = () => {
     if (isAudioPlaying) {
@@ -204,7 +221,7 @@ function App() {
             }
           }}
           onClose={() => setIsSettingsOpen(false)}
-
+        />
       )}
 
       {isGardenOpen && (
