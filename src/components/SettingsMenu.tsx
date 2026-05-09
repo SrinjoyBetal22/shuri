@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Moon, Sun, Download, Trash, Export, SpeakerSimpleHigh, SpeakerSimpleSlash, Sparkle, Tree } from '@phosphor-icons/react';
+import { X, Moon, Sun, Download, Trash, Export, SpeakerSimpleHigh, SpeakerSimpleSlash, Tree } from '@phosphor-icons/react';
 import styles from './SettingsMenu.module.css';
 
 interface SettingsMenuProps {
