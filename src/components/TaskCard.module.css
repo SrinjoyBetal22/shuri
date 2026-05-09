@@ -358,7 +358,36 @@
 
 @media (max-width: 600px) {
   .taskCard {
-    padding: var(--spacing-sm);
+    padding: var(--spacing-md);
+    gap: 12px;
+  }
+  
+  .content {
+    margin-left: 4px;
+    gap: 10px;
+  }
+  
+  .meta {
+    flex-wrap: wrap;
     gap: 8px;
+  }
+  
+  .headerRow {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .actions {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .editForm {
+    grid-template-columns: 1fr;
+  }
+  
+  .editTitleInput, .editTagsInput, .editTextarea, .editMetaRow, .editActions {
+    grid-column: span 1;
   }
 }
