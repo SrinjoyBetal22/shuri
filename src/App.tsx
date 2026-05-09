@@ -12,7 +12,6 @@ import GardenDrawer from './components/GardenDrawer';
 import IntentionScreen from './components/IntentionScreen';
 import SettingsMenu from './components/SettingsMenu';
 import TagFilter from './components/TagFilter';
-import HaikuReflection from './components/HaikuReflection';
 import { Gear, Hexagon } from '@phosphor-icons/react';
 
 function App() {
@@ -35,7 +34,6 @@ function App() {
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [isGardenOpen, setIsGardenOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isHaikuOpen, setIsHaikuOpen] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any | null>(null);
   const [isInstalled, setIsInstalled] = useState(window.matchMedia('(display-mode: standalone)').matches);
@@ -123,6 +121,14 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [focusedIndex, filteredTasks]);
 
+  const handleToggleComplete = (id: string) => {
+    const task = tasks.find(t => t.id === id);
+    if (task && !task.completed) {
+      incrementSessions();
+    }
+    toggleComplete(id);
+  };
+
   return (
     <div className={styles.container}>
       {!hasShownIntention && <IntentionScreen onSetIntention={handleSetIntention} />}
@@ -184,7 +190,7 @@ function App() {
 
         <TaskList 
           tasks={filteredTasks} 
-          onToggle={toggleComplete} 
+          onToggle={handleToggleComplete} 
           onDelete={deleteTask} 
           onUpdate={updateTask}
           onToggleTimer={toggleTimer}
@@ -209,7 +215,6 @@ function App() {
           isAudioPlaying={isAudioPlaying}
           onToggleAudio={toggleAudio}
           isInstalled={isInstalled}
-          onOpenHaiku={() => setIsHaikuOpen(true)}
           onOpenGarden={() => setIsGardenOpen(true)}
           onInstallPWA={async () => {
             if (deferredPrompt) {
@@ -228,13 +233,6 @@ function App() {
         <GardenDrawer onClose={() => setIsGardenOpen(false)} />
       )}
 
-      {isHaikuOpen && (
-        <HaikuReflection 
-          tasks={tasks} 
-          onClose={() => setIsHaikuOpen(false)} 
-        />
-      )}
-
       {(() => {
         const focusedTask = focusState ? filteredTasks.find(t => t.id === focusState.id) : null;
         return focusState && focusedTask && (
@@ -248,6 +246,8 @@ function App() {
               incrementSessions();
               setFocusState(null);
             }}
+            isAudioPlaying={isAudioPlaying}
+            onToggleAudio={toggleAudio}
           />
         );
       })()}

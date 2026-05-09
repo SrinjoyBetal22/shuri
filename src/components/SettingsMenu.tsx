@@ -10,7 +10,6 @@ interface SettingsMenuProps {
   isAudioPlaying: boolean;
   onToggleAudio: () => void;
   isInstalled: boolean;
-  onOpenHaiku: () => void;
   onOpenGarden: () => void;
   onInstallPWA: () => void;
   onClose: () => void;
@@ -24,7 +23,6 @@ export default function SettingsMenu({
   isAudioPlaying,
   onToggleAudio,
   isInstalled,
-  onOpenHaiku,
   onOpenGarden,
   onInstallPWA,
   onClose
@@ -73,13 +71,6 @@ export default function SettingsMenu({
                 <div className={styles.iconLabel}>
                   {isAudioPlaying ? <SpeakerSimpleSlash size={20} weight="light" /> : <SpeakerSimpleHigh size={20} weight="light" />}
                   <span>{isAudioPlaying ? 'Stop Ambient Audio' : 'Start Ambient Audio'}</span>
-                </div>
-              </button>
-
-              <button className={styles.actionBtn} onClick={onOpenHaiku}>
-                <div className={styles.iconLabel}>
-                  <Sparkle size={20} weight="light" />
-                  <span>Day's End Reflection</span>
                 </div>
               </button>
               

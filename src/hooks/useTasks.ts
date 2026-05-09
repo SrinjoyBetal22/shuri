@@ -16,6 +16,10 @@ export const useTasks = () => {
 
   // Timer interval
   useEffect(() => {
+    // Persistent audio element to avoid issues with GC or browser throttling
+    const sound = new Audio('/sounds/thunder.mp3');
+    sound.load(); // Preload sound
+    
     const interval = setInterval(() => {
       setTasks((prev) => {
         let hasChanges = false;
@@ -27,11 +31,17 @@ export const useTasks = () => {
             task.timer.remainingSeconds > 0
           ) {
             hasChanges = true;
+            const remaining = task.timer.remainingSeconds - 1;
+            if (remaining === 0) {
+              sound.currentTime = 0;
+              // Play attempt after user interaction is usually required
+              sound.play().catch(e => console.warn("Audio autoplay blocked or failed:", e));
+            }
             return {
               ...task,
               timer: {
                 ...task.timer,
-                remainingSeconds: task.timer.remainingSeconds - 1,
+                remainingSeconds: remaining,
               },
             };
           }

@@ -180,11 +180,11 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, onDelete, onUpdate,
         ${isCompleting ? styles.isCompleting : ''} 
         ${isFocused ? styles.focused : ''} 
         ${task.completed ? styles.completedCard : ''}
+        ${!task.completed && task.timer?.remainingSeconds === 0 ? styles.expired : ''}
       `} 
       ref={cardRef}
     >
       <div className={`${styles.statusIndicator} ${getStatusClass()}`} />
-      <div className={styles.kintsugiCrack} />
       
       <div className={styles.content}>
         <div className={styles.headerRow}>
@@ -258,18 +258,20 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, onDelete, onUpdate,
             <div className={styles.timerRow}>
               <div className={styles.timerDisplay}>
                 <Clock size={14} weight="light" />
-                <span>{formatSeconds(totalSeconds - task.timer.remainingSeconds)} / {formatSeconds(totalSeconds)} ({formatSeconds(task.timer.remainingSeconds)} left)</span>
-              </div>
-              <button 
-                className={`${styles.timerToggle} ${task.timer.isActive ? styles.timerActive : ''}`}
-                onClick={() => onToggleTimer(task.id)}
-                disabled={task.completed || task.timer.remainingSeconds === 0}
-              >
-                {task.timer.isActive ? <Pause size={16} weight="fill" /> : <Play size={16} weight="fill" />}
-              </button>
+                <span>{formatSeconds(totalSeconds - task.timer.remainingSeconds)} / {formatSeconds(totalSeconds)} 
+                  {task.timer.remainingSeconds > 0 && ` (${formatSeconds(task.timer.remainingSeconds)} left)`}
+                </span>
+              </div>              {task.timer.remainingSeconds > 0 && (
+                <button 
+                  className={`${styles.timerToggle} ${task.timer.isActive ? styles.timerActive : ''}`}
+                  onClick={() => onToggleTimer(task.id)}
+                  disabled={task.completed}
+                >
+                  {task.timer.isActive ? <Pause size={16} weight="fill" /> : <Play size={16} weight="fill" />}
+                </button>
+              )}
             </div>
-          )}
-        </div>
+          )}        </div>
       </div>
 
       {task.timer && (

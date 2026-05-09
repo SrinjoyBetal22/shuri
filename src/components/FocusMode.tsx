@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Play, Pause, Check } from '@phosphor-icons/react';
+import { X, Play, Pause, Check, SpeakerSimpleHigh, SpeakerSimpleSlash } from '@phosphor-icons/react';
 import type { Task } from '../types/task';
 import styles from './FocusMode.module.css';
 
@@ -9,9 +9,11 @@ interface FocusModeProps {
   onExit: () => void;
   onToggleTimer: () => void;
   onToggleComplete: () => void;
+  isAudioPlaying: boolean;
+  onToggleAudio: () => void;
 }
 
-const FocusMode: React.FC<FocusModeProps> = ({ task, startRect, onExit, onToggleTimer, onToggleComplete }) => {
+const FocusMode: React.FC<FocusModeProps> = ({ task, startRect, onExit, onToggleTimer, onToggleComplete, isAudioPlaying, onToggleAudio }) => {
   const [isAnimating, setIsAnimating] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
   const [showContent, setShowContent] = useState(false);
@@ -89,9 +91,14 @@ const FocusMode: React.FC<FocusModeProps> = ({ task, startRect, onExit, onToggle
       style={expansionStyle}
     >
       <div className={`${styles.contentWrapper} ${!showContent ? styles.hidden : ''}`}>
-        <button className={styles.exitBtn} onClick={handleExit}>
-          <X size={24} weight="light" />
-        </button>
+        <div className={styles.topControls}>
+          <button className={styles.audioBtn} onClick={onToggleAudio} aria-label="Toggle ambient audio">
+            {isAudioPlaying ? <SpeakerSimpleSlash size={24} weight="light" /> : <SpeakerSimpleHigh size={24} weight="light" />}
+          </button>
+          <button className={styles.exitBtn} onClick={handleExit}>
+            <X size={24} weight="light" />
+          </button>
+        </div>
 
         <div className={styles.focusContainer}>
           <div className={styles.content}>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Tree } from '@phosphor-icons/react';
 import JapanPictogram from './JapanPictogram';
-import { useGarden, AVAILABLE_FLOWERS } from '../hooks/gardenStore';
+import { useGarden } from '../hooks/gardenStore';
 import styles from './GardenDrawer.module.css';
 
 interface GardenDrawerProps {
@@ -9,18 +9,17 @@ interface GardenDrawerProps {
 }
 
 const GardenDrawer: React.FC<GardenDrawerProps> = ({ onClose }) => {
-  const { sessions, unlockedFlowers } = useGarden();
+  const { sessions, unlockedFlowers, nextFlower } = useGarden();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // Trigger opening animation
     const timer = setTimeout(() => setIsOpen(true), 10);
     return () => clearTimeout(timer);
   }, []);
 
   const handleClose = () => {
     setIsOpen(false);
-    setTimeout(onClose, 350); // Match CSS duration
+    setTimeout(onClose, 350);
   };
 
   return (
@@ -33,18 +32,27 @@ const GardenDrawer: React.FC<GardenDrawerProps> = ({ onClose }) => {
           <Tree size={40} weight="light" className={styles.headerIcon} />
           <h2>Your Focus Garden</h2>
         </div>
+        
         <p className={styles.stats}>{sessions} sessions completed</p>
+        
+        <div className={styles.nextFlower}>
+             <p>Next flower:</p>
+             <div className={styles.locked}>?</div>
+             <p>{nextFlower.name} ({nextFlower.threshold} sessions)</p>
+        </div>
+        
+        <p className={styles.guideLine}>10 completed tasks will unlock each new flower</p>
 
-        <div className={styles.grid}>
-          {AVAILABLE_FLOWERS.map((flower) => {
-            const isUnlocked = unlockedFlowers.some((f) => f.id === flower.id);
-            return (
-              <div key={flower.id} className={`${styles.flowerSlot} ${isUnlocked ? styles.unlocked : ''}`}>
-                {isUnlocked ? <JapanPictogram name="bonsai" size={48} /> : <div className={styles.locked}>?</div>}
-                <span>{flower.name}</span>
-              </div>
-            );
-          })}
+        <div className={styles.taskList}>
+           <h3>Unlocked Flowers</h3>
+           <div className={styles.grid}>
+             {unlockedFlowers.map((flower) => (
+                 <div key={flower.id} className={`${styles.flowerSlot} ${styles.unlocked}`}>
+                   <JapanPictogram name="bonsai" size={48} />
+                   <span className={styles.flowerName}>{flower.name}</span>
+                 </div>
+             ))}
+           </div>
         </div>
       </div>
     </div>

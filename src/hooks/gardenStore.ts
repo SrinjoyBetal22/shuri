@@ -6,11 +6,7 @@ export interface Flower {
   threshold: number;
 }
 
-export const AVAILABLE_FLOWERS: Flower[] = [
-  { id: 'tsukushi', name: 'Tsukushi', threshold: 10 },
-  { id: 'sakura', name: 'Sakura', threshold: 50 },
-  { id: 'tsubaki', name: 'Tsubaki', threshold: 100 },
-];
+const FLOWER_TYPES = ['Tsukushi', 'Sakura', 'Tsubaki', 'Ume', 'Ayame'];
 
 export const useGarden = () => {
   const [sessions, setSessions] = useState(() => {
@@ -24,7 +20,19 @@ export const useGarden = () => {
 
   const incrementSessions = () => setSessions((s) => s + 1);
 
-  const unlockedFlowers = AVAILABLE_FLOWERS.filter((f) => sessions >= f.threshold);
+  const numUnlocked = Math.floor(sessions / 10);
+  
+  const unlockedFlowers: Flower[] = Array.from({ length: numUnlocked }, (_, i) => ({
+    id: `flower-${i}`,
+    name: FLOWER_TYPES[i % FLOWER_TYPES.length],
+    threshold: (i + 1) * 10
+  }));
 
-  return { sessions, incrementSessions, unlockedFlowers };
+  const nextFlower = {
+    id: `flower-${numUnlocked}`,
+    name: FLOWER_TYPES[numUnlocked % FLOWER_TYPES.length],
+    threshold: (numUnlocked + 1) * 10
+  };
+
+  return { sessions, incrementSessions, unlockedFlowers, nextFlower };
 };

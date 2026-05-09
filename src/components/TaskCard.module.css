@@ -58,10 +58,10 @@
 }
 
 .checkboxActive {
-  background-color: var(--accent-orange);
-  border-color: var(--accent-orange);
+  background-color: var(--accent-green);
+  border-color: var(--accent-green);
   color: var(--bg-color);
-  box-shadow: 0 0 8px rgba(214, 160, 85, 0.4);
+  box-shadow: 0 0 8px rgba(81, 120, 85, 0.4);
 }
 
 .title {
@@ -81,29 +81,6 @@
 
 .completed {
   color: var(--text-subtle);
-  position: relative;
-  display: inline-block;
-  transition: color 0.3s ease;
-}
-
-.completed::after {
-  content: '';
-  position: absolute;
-  left: -2px;
-  right: -2px;
-  top: 55%;
-  height: 1.5px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    var(--accent-orange) 20%, 
-    #f3d0a2 50%, 
-    var(--accent-orange) 80%, 
-    transparent 100%
-  );
-  transform: translateY(-50%) rotate(-0.5deg);
-  opacity: 0.6;
-  pointer-events: none;
-  filter: blur(0.2px);
 }
 
 .kintsugiCrack {
@@ -120,12 +97,8 @@
 }
 
 .completedCard {
-  border-color: rgba(214, 160, 85, 0.3) !important;
-  background: linear-gradient(135deg, var(--bg-card), rgba(214, 160, 85, 0.02));
-}
-
-.completedCard .kintsugiCrack {
-  opacity: 1;
+  border-color: var(--border-color) !important;
+  background: var(--bg-card);
 }
 
 .description {
@@ -234,11 +207,34 @@
   color: var(--text-main);
 }
 
-.statusOverdue { background-color: var(--accent-red); }
+.timerExpired {
+  color: var(--accent-red);
+  font-weight: 500;
+}
+
+.expired {
+  animation: flash 1.5s ease-out;
+}
+
+@keyframes flash {
+  0% { background-color: var(--bg-card); }
+  50% { background-color: var(--flash-color); opacity: 0.9; }
+  100% { background-color: var(--bg-card); }
+}
+
+[data-theme='dark'] {
+  --flash-color: #e4dcd1; /* Light mode card color */
+}
+
+[data-theme='light'] {
+  --flash-color: #302e2e; /* Dark mode card color */
+}
+
 .statusToday { background-color: var(--accent-orange); }
 .statusSoon { background-color: var(--accent-yellow); }
 .statusCompleted { background-color: var(--accent-green); }
 .statusAll { background-color: var(--border-color); }
+
 
 .editing {
   border-color: var(--text-main);

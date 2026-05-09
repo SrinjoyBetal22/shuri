@@ -44,15 +44,33 @@
   pointer-events: none;
 }
 
-.exitBtn {
+.topControls {
   position: absolute;
   top: var(--spacing-lg);
   right: var(--spacing-lg);
+  display: flex;
+  gap: 8px;
+}
+
+.audioBtn {
   color: var(--text-subtle);
   padding: 12px;
   border-radius: 50%;
   transition: all 0.2s ease;
 }
+
+.audioBtn:hover {
+  color: var(--text-main);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.exitBtn {
+  color: var(--text-subtle);
+  padding: 12px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
 
 .exitBtn:hover {
   color: var(--text-main);
