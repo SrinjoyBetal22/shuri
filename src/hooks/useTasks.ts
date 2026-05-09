@@ -1,47 +1,18 @@
 import { useState, useEffect, useMemo } from 'react';
-import { collection, doc, onSnapshot, updateDoc, deleteDoc, writeBatch, setDoc } from 'firebase/firestore';
-import { auth, db } from '../config/firebase';
 import type { Task, FilterType } from '../types/task';
 
 export const useTasks = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    const saved = localStorage.getItem('tasks');
+    return saved ? JSON.parse(saved) : [];
+  });
+
   const [filter, setFilter] = useState<FilterType>('All');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   useEffect(() => {
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const tasksCollection = collection(db, 'users', user.uid, 'tasks');
-    
-    // Migration: Check for localStorage tasks
-    const saved = localStorage.getItem('tasks');
-    if (saved) {
-      const localTasks: Task[] = JSON.parse(saved);
-      if (localTasks.length > 0) {
-        const batch = writeBatch(db);
-        localTasks.forEach(task => {
-          const docRef = doc(tasksCollection, task.id);
-          batch.set(docRef, task);
-        });
-        batch.commit().then(() => {
-          localStorage.removeItem('tasks');
-        });
-      } else {
-        localStorage.removeItem('tasks');
-      }
-    }
-
-    const unsubscribe = onSnapshot(tasksCollection, (snapshot) => {
-      const newTasks: Task[] = [];
-      snapshot.forEach((doc) => {
-        newTasks.push(doc.data() as Task);
-      });
-      setTasks(newTasks);
-    });
-
-    return () => unsubscribe();
-  }, []);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
   // Timer interval
   useEffect(() => {
@@ -64,6 +35,7 @@ export const useTasks = () => {
               },
             };
           }
+          // Auto-pause if finished
           if (task.timer?.isActive && task.timer?.remainingSeconds === 0) {
             hasChanges = true;
             return {
@@ -83,49 +55,61 @@ export const useTasks = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const addTask = async (taskData: Omit<Task, 'id' | 'completed' | 'createdAt' | 'updatedAt'>) => {
-    const user = auth.currentUser;
-    if (!user) return;
+  const addTask = (taskData: Omit<Task, 'id' | 'completed' | 'createdAt' | 'updatedAt'>) => {
     const newTask: Task = {
       ...taskData,
-      id: crypto.randomUUID(),
+      id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11),
       completed: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    const taskDocRef = doc(db, 'users', user.uid, 'tasks', newTask.id);
-    await setDoc(taskDocRef, newTask);
+    setTasks((prev) => [newTask, ...prev]);
   };
 
-  const updateTask = async (id: string, updates: Partial<Task>) => {
-    const user = auth.currentUser;
-    if (!user) return;
-    const taskRef = doc(db, 'users', user.uid, 'tasks', id);
-    await updateDoc(taskRef, { ...updates, updatedAt: new Date().toISOString() });
+  const updateTask = (id: string, updates: Partial<Task>) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, ...updates, updatedAt: new Date().toISOString() } : task
+      )
+    );
   };
 
-  const toggleTimer = async (id: string) => {
-    const task = tasks.find(t => t.id === id);
-    if (!task || !task.timer) return;
-    await updateTask(id, {
-      timer: { ...task.timer, isActive: !task.timer.isActive }
-    });
+  const toggleTimer = (id: string) => {
+    setTasks((prev) =>
+      prev.map((task) => {
+        if (task.id === id && task.timer) {
+          return {
+            ...task,
+            timer: {
+              ...task.timer,
+              isActive: !task.timer.isActive,
+            },
+            updatedAt: new Date().toISOString(),
+          };
+        }
+        return task;
+      })
+    );
   };
 
-  const deleteTask = async (id: string) => {
-    const user = auth.currentUser;
-    if (!user) return;
-    const taskRef = doc(db, 'users', user.uid, 'tasks', id);
-    await deleteDoc(taskRef);
+  const deleteTask = (id: string) => {
+    setTasks((prev) => prev.filter((task) => task.id !== id));
   };
 
-  const toggleComplete = async (id: string) => {
-    const task = tasks.find(t => t.id === id);
-    if (!task) return;
-    await updateTask(id, {
-      completed: !task.completed,
-      timer: task.timer ? { ...task.timer, isActive: false } : undefined
-    });
+  const toggleComplete = (id: string) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id
+          ? { 
+              ...task, 
+              completed: !task.completed, 
+              updatedAt: new Date().toISOString(),
+              // Pause timer if completed
+              timer: task.timer ? { ...task.timer, isActive: false } : undefined
+            }
+          : task
+      )
+    );
   };
 
   const filteredTasks = useMemo(() => {

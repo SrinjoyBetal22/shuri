@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './config/firebase';
 import { useTasks } from './hooks/useTasks';
 import { useGarden } from './hooks/gardenStore';
 import { zenMusic } from './hooks/zenMusic';
@@ -12,36 +10,13 @@ import FocusMode from './components/FocusMode';
 import CommandPalette from './components/CommandPalette';
 import GardenDrawer from './components/GardenDrawer';
 import IntentionScreen from './components/IntentionScreen';
-import LoginScreen from './components/LoginScreen';
 import SettingsMenu from './components/SettingsMenu';
 import TagFilter from './components/TagFilter';
 import HaikuReflection from './components/HaikuReflection';
 import { Gear, Hexagon } from '@phosphor-icons/react';
 
 function App() {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
   const { incrementSessions } = useGarden();
-  const [deferredPrompt, setDeferredPrompt] = useState<any | null>(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    const handleBeforeInstallPrompt = (e: any) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-  }, []);
-
   const { 
     filter, 
     setFilter, 
@@ -62,13 +37,6 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isHaikuOpen, setIsHaikuOpen] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [isInstalled, setIsInstalled] = useState(window.matchMedia('(display-mode: standalone)').matches);
-
-  useEffect(() => {
-    const handler = (e: MediaQueryListEvent) => setIsInstalled(e.matches);
-    window.matchMedia('(display-mode: standalone)').addEventListener('change', handler);
-    return () => window.matchMedia('(display-mode: standalone)').removeEventListener('change', handler);
-  }, []);
 
   const toggleAudio = () => {
     if (isAudioPlaying) {
@@ -137,9 +105,6 @@ function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [focusedIndex, filteredTasks]);
-
-  if (loading) return null;
-  if (!user) return <LoginScreen />;
 
   return (
     <div className={styles.container}>
@@ -226,16 +191,12 @@ function App() {
           onToggleTheme={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
           isAudioPlaying={isAudioPlaying}
           onToggleAudio={toggleAudio}
-          isInstalled={isInstalled}
           onOpenHaiku={() => setIsHaikuOpen(true)}
           onOpenGarden={() => setIsGardenOpen(true)}
-          onInstallPWA={async () => {
-            if (deferredPrompt) {
-              await deferredPrompt.prompt();
-              const { outcome } = await deferredPrompt.userChoice;
-              if (outcome === 'accepted') {
-                setDeferredPrompt(null);
-              }
+          onInstallPWA={() => {
+            const event = window.localStorage.getItem('deferredPrompt');
+            if (event) {
+              (JSON.parse(event) as any).prompt();
             }
           }}
           onClose={() => setIsSettingsOpen(false)}

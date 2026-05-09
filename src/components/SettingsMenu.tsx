@@ -9,7 +9,6 @@ interface SettingsMenuProps {
   onToggleTheme: () => void;
   isAudioPlaying: boolean;
   onToggleAudio: () => void;
-  isInstalled: boolean;
   onOpenHaiku: () => void;
   onOpenGarden: () => void;
   onInstallPWA: () => void;
@@ -23,7 +22,6 @@ export default function SettingsMenu({
   onToggleTheme,
   isAudioPlaying,
   onToggleAudio,
-  isInstalled,
   onOpenHaiku,
   onOpenGarden,
   onInstallPWA,
@@ -102,14 +100,12 @@ export default function SettingsMenu({
                 </div>
               </button>
               
-              {!isInstalled && (
-                <button className={styles.actionBtn} onClick={onInstallPWA}>
-                  <div className={styles.iconLabel}>
-                    <Download size={20} weight="light" />
-                    <span>Install Application</span>
-                  </div>
-                </button>
-              )}
+              <button className={styles.actionBtn} onClick={onInstallPWA}>
+                <div className={styles.iconLabel}>
+                  <Download size={20} weight="light" />
+                  <span>Install Application</span>
+                </div>
+              </button>
             </div>
           </section>
 
