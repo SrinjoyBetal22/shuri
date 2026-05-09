@@ -191,16 +191,20 @@ function App() {
           onToggleTheme={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
           isAudioPlaying={isAudioPlaying}
           onToggleAudio={toggleAudio}
+          isInstalled={isInstalled}
           onOpenHaiku={() => setIsHaikuOpen(true)}
           onOpenGarden={() => setIsGardenOpen(true)}
-          onInstallPWA={() => {
-            const event = window.localStorage.getItem('deferredPrompt');
-            if (event) {
-              (JSON.parse(event) as any).prompt();
+          onInstallPWA={async () => {
+            if (deferredPrompt) {
+              await deferredPrompt.prompt();
+              const { outcome } = await deferredPrompt.userChoice;
+              if (outcome === 'accepted') {
+                setDeferredPrompt(null);
+              }
             }
           }}
           onClose={() => setIsSettingsOpen(false)}
-        />
+
       )}
 
       {isGardenOpen && (
