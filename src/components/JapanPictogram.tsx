@@ -1,5 +1,3 @@
-import React from 'react';
-
 // Common icon names for easy reference:
 // fuji-san, jinja, kaminarimon, onsen, sushi, matcha, bonsai, samurai, ninja, etc.
 
@@ -10,12 +8,12 @@ interface JapanPictogramProps {
   color?: string;
 }
 
-const JapanPictogram: React.FC<JapanPictogramProps> = ({ 
+const JapanPictogram = ({ 
   name, 
   size = 24, 
   className = '', 
   color 
-}) => {
+}: JapanPictogramProps) => {
   return (
     <i 
       className={`jpic jpic-${name} ${className}`} 

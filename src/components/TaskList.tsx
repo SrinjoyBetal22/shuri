@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Task } from '../types/task';
 import TaskCard from './TaskCard';
 import styles from './TaskList.module.css';
@@ -13,7 +12,7 @@ interface TaskListProps {
   focusedIndex?: number;
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks, onToggle, onDelete, onUpdate, onToggleTimer, onFocus, focusedIndex = -1 }) => {
+const TaskList = ({ tasks, onToggle, onDelete, onUpdate, onToggleTimer, onFocus, focusedIndex = -1 }: TaskListProps) => {
   const isStale = (task: Task) => {
     const updated = new Date(task.updatedAt);
     const now = new Date();
