@@ -223,11 +223,11 @@
 }
 
 [data-theme='dark'] {
-  --flash-color: #e4dcd1; /* Light mode card color */
+  --flash-color: #eee5da; /* Light mode card color */
 }
 
 [data-theme='light'] {
-  --flash-color: #302e2e; /* Dark mode card color */
+  --flash-color: #242222; /* Dark mode card color */
 }
 
 .statusToday { background-color: var(--accent-orange); }

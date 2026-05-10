@@ -12,7 +12,7 @@ import GardenDrawer from './components/GardenDrawer';
 import IntentionScreen from './components/IntentionScreen';
 import SettingsMenu from './components/SettingsMenu';
 import TagFilter from './components/TagFilter';
-import { Gear, Hexagon } from '@phosphor-icons/react';
+import { Gear, Circle } from '@phosphor-icons/react';
 
 function App() {
   const { incrementSessions } = useGarden();
@@ -167,7 +167,7 @@ function App() {
                 className={`${styles.tab} ${filter === f.label && !selectedTag ? styles.tabActive : ''}`}
                 onClick={() => { setFilter(f.label); setSelectedTag(null); }}
               >
-                <Hexagon size={12} weight="fill" className={`${styles.filterIcon} ${f.dotClass}`} />
+                <Circle size={12} weight="fill" className={`${styles.filterIcon} ${f.dotClass}`} />
                 <span className={styles.tabText}>{f.label}</span>
               </button>
             ))}
